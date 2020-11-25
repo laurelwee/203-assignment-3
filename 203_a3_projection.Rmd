@@ -1,0 +1,31 @@
+---
+title: "California Groundwater Projections"
+author: "Laurel Wee"
+date: "11/24/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+library(here)
+```
+
+```{r}
+ca_groundwater <- read.csv(here("data", "ca_groundwater.csv")) %>% 
+  rename("year"="X", "mean_projection"="mean")
+```
+
+```{r}
+ggplot(data = ca_groundwater) +
+  geom_line(aes(year, mean_projection, color="mean_projection"))+
+  geom_line(aes(year, lower_limit, color= "lower_limit"))+
+  geom_line(aes(year, upper_limit, color= "upper_limit"))+ 
+  geom_hline(yintercept = 0, color = "black")+
+  scale_color_manual(values = c(
+    'mean_projection' = 'black',
+    'lower_limit' = 'red' ,
+    'upper_limit' = 'blue'))+
+  guides(color = guide_legend(reverse = TRUE))
+```
+
