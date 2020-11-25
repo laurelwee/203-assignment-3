@@ -15,6 +15,26 @@ library(here)
 ca_groundwater <- read.csv(here("data", "ca_groundwater.csv")) %>% 
   rename("year"="X", "mean_projection"="mean")
 ```
+```{r}
+ggplot(data = ca_groundwater)+
+  geom_line(aes(year, water_in, color="water_in"))+
+  geom_line(aes(year, water_out, color= "water_out"))+
+  geom_line(aes(year, annual_change, color="annual_change"))+
+  scale_color_manual(values = c(
+    'water_in' = 'blue',
+    'water_out' = 'red',
+    'annual_change' = 'black'))+
+  guides(color = guide_legend(reverse = TRUE))+
+  labs(x= "Year", y= "Water Flow (x 10^9 m^3)")+
+  theme(legend.title = element_blank())
+```
+## Dear Senator Meyer,
+
+## A. Introduction
+California has enough water now in 2020, but it is important to look ahead as the important natural resource continues to be in increasing demand due to California's growth and the depleting groundwater stock. Below you will find a data analysis on California's projected groundwater stocks. 
+
+## B. Data Analysis
+There is a chance that we will run out of groundwater storage by 2044 with a 5% chance that it could be later, but there is 95% probability that CA will run out of water before that. 
 
 ```{r}
 ggplot(data = ca_groundwater) +
@@ -26,6 +46,8 @@ ggplot(data = ca_groundwater) +
     'mean_projection' = 'black',
     'lower_limit' = 'red' ,
     'upper_limit' = 'blue'))+
-  guides(color = guide_legend(reverse = TRUE))
+  guides(color = guide_legend(reverse = TRUE))+
+  theme(legend.title = element_blank())+
+  labs(x="Year", y="Water Stock (x10^9 m^3")
 ```
 
