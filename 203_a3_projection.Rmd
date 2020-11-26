@@ -2,57 +2,72 @@
 title: "California Groundwater Projections"
 author: "Laurel Wee"
 date: "11/24/2020"
-output: html_document
+output:
+  pdf_document: default
+  html_document: default
 ---
 
-```{r setup, include=FALSE}
+```{r setup, include=FALSE, echo=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 library(tidyverse)
 library(here)
 ```
 
-```{r}
+```{r,echo=FALSE}
 ca_groundwater <- read.csv(here("data", "ca_groundwater.csv")) %>% 
   rename("year"="X", "mean_projection"="mean")
 ```
 
-## Dear Senator Meyer,
+Dear Senator Meyer,
 
-## A. Introduction
-California has enough water now in 2020, but it is important to look ahead as the important natural resource continues to be in increasing demand due to California's growth and the depleting groundwater stock. Below you will find a data analysis on California's projected groundwater stocks. 
+It is good to hear that you are interested in learning more about statewide groundwater resource depletion. California has enough water now in 2020, but it is important to look ahead as this vital natural resource continues to be in increasing demand. This demand is due to California's growth and the depleting groundwater stock. Below you will find a data analysis along with figures that show models of California's projected annual changes in  groundwater stocks and three scenarios for when California will hit a depleted stock. 
 
-## B. Data Analysis
-There is a chance that we will run out of groundwater storage by 2044 with a 5% chance that it could be later, but there is 95% probability that CA will run out of water before that. 
-```{r}
+As seen in Figure 1, as time progresses demand for groundwater (Water Out) is greater than the amount of water going in (Water In) to the stock. This is leading to an overall decrease in groundwater availability over time (Annual Change). This model shows a net annual  232x10^6 m^3 decrease of water per year from the baseline stock. The rate of change was used to predict how much water will remain in 2050. 
+
+Three scenarios are used to determine groundwater depletion, these scenarios are comprised of the mean baseline estimate of groundwater (350x10^9 m^3) and an upper (465x10^9 m^3)and lower limit (225x10^9 m^3) estimated baselines that are at one standard deviation (115x10^9 m^3) from the mean in 2000. A 90% confidence interval is used. In all three scenarios of varying baseline 2000 groundwater values we found that California will be in a groundwater deficit by 2050. There is a chance that we will run out of groundwater storage by 2044 with a 5% chance that the year of depletion could be later, but there is 95% probability that CA will run out of water in or before 2044. There is a 90% chance that CA will run out of ground water stock between 2026 and 2044, and a 5% chance that the stock would be depleted even earlier than 2026 (Figure 2). 
+
+```{r, echo=FALSE}
 ggplot(data = ca_groundwater)+
-  geom_line(aes(year, water_in, color="water_in"))+
-  geom_line(aes(year, water_out, color= "water_out"))+
-  geom_line(aes(year, annual_change, color="annual_change"))+
+  geom_line(aes(year, water_in, color="Water In"))+
+  geom_line(aes(year, water_out, color= "Water Out"))+
+  geom_line(aes(year, annual_change, color="Annual Change"))+
   scale_color_manual(values = c(
-    'water_in' = 'blue',
-    'water_out' = 'red',
-    'annual_change' = 'black'))+
+    'Water In' = 'blue',
+    'Water Out' = 'red',
+    'Annual Change' = 'black'))+
   guides(color = guide_legend(reverse = TRUE))+
-  labs(x= "Year", y= "Water Flow (x 10^9 m^3)")+
+  labs(x= "Year",
+       y= "Water Flow (x 10^9 m^3)",
+       title = "Demand and Supply of California Groundwater Availability (Wee)" , 
+       subtitle = "From 2000-2050. Data: Curmi et al. (2013)")+
   theme(legend.title = element_blank())
 
-# Figure out relabeling legend and including equations possibly?
 ```
-**Figure 1:** Model of the California groundwater projected flows in, out, and overall change between 2000-2050 using a Business as Usual scenario (BAU). Data: Curmi et al. (2013).
 
-```{r}
+**Figure 1:** Model of the California groundwater projected flows in, out, and overall change between 2000-2050 using a Business as Usual scenario (BAU). The net annual change (black line) is negative due to the water withdraw going out (red line) of the stocks is greater than the recharge of water going in (blue line) to the stock . Data: Curmi et al. (2013).
+
+```{r, echo=FALSE}
 ggplot(data = ca_groundwater) +
-  geom_line(aes(year, mean_projection, color="mean_projection"))+
-  geom_line(aes(year, lower_limit, color= "lower_limit"))+
-  geom_line(aes(year, upper_limit, color= "upper_limit"))+ 
+  geom_line(aes(year, mean_projection, color="Middle Projection"))+
+  geom_line(aes(year, lower_limit, color= "Lower Limit"))+
+  geom_line(aes(year, upper_limit, color= "Upper Limit"))+ 
   geom_hline(yintercept = 0, color = "black")+
   scale_color_manual(values = c(
-    'mean_projection' = 'black',
-    'lower_limit' = 'red' ,
-    'upper_limit' = 'blue'))+
+    'Middle Projection' = 'black',
+    'Lower Limit' = 'red' ,
+    'Upper Limit' = 'blue'))+
   guides(color = guide_legend(reverse = TRUE))+
   theme(legend.title = element_blank())+
-  labs(x="Year", y="Water Stock (x10^9 m^3")
+  labs(x="Year", 
+       y="Water Stock (x10^9 m^3)",
+       title = "Projected Scenarios for California Groundwater Availability (Wee)" , 
+       subtitle = "From 2000-2050. Data: Curmi et al. (2013)")
 ```
 
-**Figure 2:** Model of projected ground water stocks from 2000-2050. Using expected 2000 resource value of 350x10^9 m^3 with a standard deviation of 115x10^9 m^3 and a confidence interval of 90. 
+
+**Figure 2:** Model of projected ground water stocks from 2000-2050. Using expected 2000 resource value of 350x10^9 m^3 with a standard deviation of 115x10^9 m^3 and a confidence interval of 90. Upper (blue line) and lower (red line) limits are the scenarios one standard deviation from the mean (black line) projection value. The point at which the respective lines cross the y-axis, represents the year California will deplete the groundwater stock. The lower limit, mean, and upper limit show depletion at 2026, 236, and 2044 respectively. 
+
+Based off all three scenarios for groundwater depletion we saw that California has a 95% chance of having no groundwater available some time before 2050. Due to these findings it is imperative to continue efforts to expand policies supporting groundwater in California. Further researcher would help reduce uncertainty in our models by improving estimates on past, present, and future groundwater stocks, as well as finding ways to better predict future recharge and withdrawal amounts.
+
+Sincerely,
+Laurel Wee
